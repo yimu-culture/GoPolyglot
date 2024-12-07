@@ -106,7 +106,6 @@ md_content = """
         "action": "start_translation"
       }'
     ```
-"""
 
 
 - **执行任务**：
