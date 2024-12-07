@@ -117,7 +117,6 @@ md_content = """
         "action": "start_translation"
       }'
     ```
-"""
 
 
 - **下载翻译结果**：
@@ -128,4 +127,4 @@ md_content = """
         "action": "start_translation"
       }'
     ```
-"""
+
