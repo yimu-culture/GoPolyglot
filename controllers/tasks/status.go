@@ -16,7 +16,7 @@ func GetTaskStatus(ctx *gin.Context) error {
 	}
 
 	// 获取任务状态
-	status, err := task.GetTaskStatus(int32(taskID))
+	status, err := task.GetTaskStatus(ctx, int32(taskID))
 	if err != nil {
 		return error_wrapper.WitheError("Failed to retrieve task status")
 	}
