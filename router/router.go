@@ -3,9 +3,11 @@ package router
 import (
 	"GoPolyglot/controllers"
 	"GoPolyglot/controllers/auth"
+	"GoPolyglot/controllers/tasks"
 	"GoPolyglot/libs/common/error_wrapper"
 	"GoPolyglot/libs/configs"
 	"GoPolyglot/libs/logger"
+	"GoPolyglot/router/middlewares"
 	"GoPolyglot/router/middlewares/trace"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -40,13 +42,15 @@ func InitRouter() {
 	router.POST("/auth/login", error_wrapper.WrapperError(auth.LoginUser))    // 用户登录
 
 	// 任务管理相关路由
-	//taskGroup := router.Group("/tasks")
-	//{
-	//taskGroup.POST("", error_wrapper.WrapperError(tasks.CreateTask))             // 创建翻译任务
-	//taskGroup.POST("/:task_id/translate", error_wrapper.WrapperError(tasks.TranslateTask)) // 执行翻译任务
-	//taskGroup.GET("/:task_id", error_wrapper.WrapperError(tasks.GetTaskStatus))        // 获取任务状态
-	//taskGroup.GET("/:task_id/download", error_wrapper.WrapperError(tasks.DownloadTask)) // 下载翻译文档
-	//}
+	//withAuth := router.Group("", middleware.StrongAuthMiddleware())
+	limitAuth := router.Group("", middleware.StrongAuthMiddleware(), middleware.LogMiddleware(), middleware.RateLimitMiddleware())
+	taskGroup := limitAuth.Group("/tasks")
+	{
+		taskGroup.POST("", error_wrapper.WrapperError(tasks.CreateTask)) // 创建翻译任务
+		//taskGroup.POST("/:task_id/translate", error_wrapper.WrapperError(tasks.TranslateTask)) // 执行翻译任务
+		//taskGroup.GET("/:task_id", error_wrapper.WrapperError(tasks.GetTaskStatus))        // 获取任务状态
+		//taskGroup.GET("/:task_id/download", error_wrapper.WrapperError(tasks.DownloadTask)) // 下载翻译文档
+	}
 
 	srv := &http.Server{
 		Addr:    configs.GConfig.Server.Address + ":" + configs.GConfig.Server.Port,
