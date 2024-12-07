@@ -24,9 +24,9 @@ databases:
       dialTimeout: 5
       asname: "base"
   mysql:
-    - username: ""
-      password: ""
-      address: "xxxxxx:3306"
-      dbname: ""
-      asname: ""
+    - username: "root"
+      password: "91F#(1ald"
+      address: "localhost:3306"
+      dbname: "ReelCity"
+      asname: "ReelCity"
       maxOpenConns: 50

@@ -6,7 +6,6 @@ import (
 	"GoPolyglot/libs/common/error_wrapper"
 	"GoPolyglot/libs/configs"
 	"GoPolyglot/libs/logger"
-	"GoPolyglot/router/middlewares/recovery"
 	"GoPolyglot/router/middlewares/trace"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -27,7 +26,7 @@ func InitRouter() {
 	}
 
 	router := gin.Default()
-	router.Use(trace.SetUp(), recovery.SetUp())
+	router.Use(trace.SetUp())
 
 	router.GET("/", func(c *gin.Context) { c.JSON(http.StatusOK, error_wrapper.WithSuccess(c)) })
 	router.GET("/ping", func(c *gin.Context) { c.String(http.StatusOK, "PONG") })

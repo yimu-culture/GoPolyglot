@@ -3,6 +3,7 @@ package main
 import (
 	"GoPolyglot/libs/common"
 	"GoPolyglot/libs/configs"
+	"GoPolyglot/libs/dbs"
 	"GoPolyglot/libs/logger"
 	"GoPolyglot/router"
 	"flag"
@@ -29,9 +30,9 @@ func init() {
 		log.Fatal(err.Error())
 	}
 	///* 初始化mysql */
-	//if err = dbs.InitMysql(); err != nil {
-	//	log.Fatal(err.Error())
-	//}
+	if err = dbs.InitMysql(); err != nil {
+		log.Fatal(err.Error())
+	}
 	///* 初始化redis */
 	//if err = dbs.InitRedis(); err != nil {
 	//	log.Fatal(err.Error())
