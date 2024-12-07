@@ -108,3 +108,24 @@ md_content = """
     ```
 """
 
+
+- **执行任务**：
+    ```bash
+    curl --location --request POST 'http://0.0.0.0:6688/tasks/8/translate' \
+      --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjExMjEyMzQzMiIsInVzZXJfaWQiOjMsImV4cCI6MTczMzY0MDgyNywiaXNzIjoiR29Qb2x5Z2xvdCJ9.PeJNWgi0u9gVOOjjZSeZOh-qORK5O4rgyqFBfUftSVg' \
+      --data '{
+        "action": "start_translation"
+      }'
+    ```
+"""
+
+
+- **下载翻译结果**：
+    ```bash
+    curl --location --request POST 'http://0.0.0.0:6688/tasks/8/translate' \
+      --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjExMjEyMzQzMiIsInVzZXJfaWQiOjMsImV4cCI6MTczMzY0MDgyNywiaXNzIjoiR29Qb2x5Z2xvdCJ9.PeJNWgi0u9gVOOjjZSeZOh-qORK5O4rgyqFBfUftSVg' \
+      --data '{
+        "action": "start_translation"
+      }'
+    ```
+"""

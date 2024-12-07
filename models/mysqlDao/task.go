@@ -26,6 +26,16 @@ func (TranslationTask) TableName() string {
 	return "translation_tasks"
 }
 
+func CreateTask(ctx *gin.Context, task *TranslationTask) (*TranslationTask, error) {
+	db := dbs.GMysql["ReelCity"].WithContext(ctx)
+
+	if err := db.Create(task).Error; err != nil {
+		return nil, err
+	}
+
+	return task, nil
+}
+
 // GetTranslationTaskByID 根据任务ID查询任务
 func GetTranslationTaskByID(ctx *gin.Context, taskID int32) (*TranslationTask, error) {
 	var task TranslationTask

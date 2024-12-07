@@ -17,5 +17,5 @@ func CreateTask(c *gin.Context, userID int32, sourceLang, targetLang, sourceDoc 
 	}
 
 	// 调用 model 层创建任务
-	return mysqlDao.CreateTranslationTask(c, task)
+	return mysqlDao.CreateTask(c, task)
 }
