@@ -46,8 +46,8 @@ func InitRouter() {
 	limitAuth := router.Group("", middleware.StrongAuthMiddleware(), middleware.LogMiddleware(), middleware.RateLimitMiddleware())
 	taskGroup := limitAuth.Group("/tasks")
 	{
-		taskGroup.POST("", error_wrapper.WrapperError(tasks.CreateTask)) // 创建翻译任务
-		//taskGroup.POST("/:task_id/translate", error_wrapper.WrapperError(tasks.TranslateTask)) // 执行翻译任务
+		taskGroup.POST("", error_wrapper.WrapperError(tasks.CreateTask))                       // 创建翻译任务
+		taskGroup.POST("/:task_id/translate", error_wrapper.WrapperError(tasks.TranslateTask)) // 执行翻译任务
 		//taskGroup.GET("/:task_id", error_wrapper.WrapperError(tasks.GetTaskStatus))        // 获取任务状态
 		//taskGroup.GET("/:task_id/download", error_wrapper.WrapperError(tasks.DownloadTask)) // 下载翻译文档
 	}
