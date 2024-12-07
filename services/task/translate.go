@@ -21,7 +21,7 @@ func StartTranslationTask(ctx *gin.Context, taskID int32) (*mysqlDao.Translation
 
 	// 2. 更新任务状态为 "翻译中"
 	_, err = mysqlDao.UpdateTranslationTask(ctx, taskID, map[string]interface{}{
-		"status": "翻译中",
+		"status": "in_progress",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to update task status: %v", err)
@@ -32,7 +32,7 @@ func StartTranslationTask(ctx *gin.Context, taskID int32) (*mysqlDao.Translation
 	if err != nil {
 		// 如果翻译失败，将任务状态更新为 "翻译失败"
 		_, errUpdate := mysqlDao.UpdateTranslationTask(ctx, taskID, map[string]interface{}{
-			"status": "翻译失败",
+			"status": "fail",
 		})
 		if errUpdate != nil {
 			log.Printf("failed to update task status to 'failed': %v", errUpdate)
@@ -42,7 +42,7 @@ func StartTranslationTask(ctx *gin.Context, taskID int32) (*mysqlDao.Translation
 
 	// 4. 更新任务状态为 "已完成" 并保存翻译后的文档路径或内容
 	_, err = mysqlDao.UpdateTranslationTask(ctx, taskID, map[string]interface{}{
-		"status":         "已完成",
+		"status":         "completed",
 		"translated_doc": translatedDoc,
 	})
 	if err != nil {

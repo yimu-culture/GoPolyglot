@@ -29,7 +29,7 @@ func (TranslationTask) TableName() string {
 
 // CreateTranslationTask 创建翻译任务
 func CreateTranslationTask(ctx *gin.Context, task *TranslationTask) (*TranslationTask, error) {
-	result := dbs.GMysql["ReelCity"].Create(task)
+	result := dbs.GMysql["ReelCity"].WithContext(ctx).Create(task)
 	if result.Error != nil {
 		return nil, result.Error // 返回错误信息
 	}
@@ -39,7 +39,7 @@ func CreateTranslationTask(ctx *gin.Context, task *TranslationTask) (*Translatio
 // GetTranslationTaskByID 根据任务ID查询翻译任务
 func GetTranslationTaskByID(ctx *gin.Context, taskID int32) (*TranslationTask, error) {
 	var task TranslationTask
-	result := dbs.GMysql["ReelCity"].First(&task, taskID)
+	result := dbs.GMysql["ReelCity"].WithContext(ctx).First(&task, taskID)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			return nil, fmt.Errorf("task ID %d not found", taskID) // 如果任务未找到，返回错误
@@ -52,7 +52,7 @@ func GetTranslationTaskByID(ctx *gin.Context, taskID int32) (*TranslationTask, e
 // UpdateTranslationTask 更新翻译任务
 func UpdateTranslationTask(ctx *gin.Context, taskID int32, updateData map[string]interface{}) (*TranslationTask, error) {
 	var task TranslationTask
-	result := dbs.GMysql["ReelCity"].First(&task, taskID)
+	result := dbs.GMysql["ReelCity"].WithContext(ctx).First(&task, taskID)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			return nil, fmt.Errorf("task ID %d not found", taskID)
@@ -67,34 +67,4 @@ func UpdateTranslationTask(ctx *gin.Context, taskID int32, updateData map[string
 	}
 
 	return &task, nil
-}
-
-// GetAllTranslationTasksByUser 获取用户所有翻译任务
-func GetAllTranslationTasksByUser(ctx *gin.Context, userID int32) ([]TranslationTask, error) {
-	var tasks []TranslationTask
-	result := dbs.GMysql["ReelCity"].Where("user_id = ?", userID).Find(&tasks)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return tasks, nil
-}
-
-// DeleteTranslationTask 根据任务ID删除翻译任务
-func DeleteTranslationTask(ctx *gin.Context, taskID int32) error {
-	var task TranslationTask
-	result := dbs.GMysql["ReelCity"].First(&task, taskID)
-	if result.Error != nil {
-		if result.Error == gorm.ErrRecordNotFound {
-			return fmt.Errorf("task ID %d not found", taskID)
-		}
-		return result.Error
-	}
-
-	// 删除任务记录
-	result = dbs.GMysql["ReelCity"].Delete(&task)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return nil
 }
