@@ -5,7 +5,6 @@ import (
 	"GoPolyglot/models/mysqlDao"
 	"github.com/gin-gonic/gin"
 	"os"
-	"path/filepath"
 	"strconv"
 )
 
@@ -30,12 +29,13 @@ func DownloadTranslation(ctx *gin.Context) error {
 	}
 
 	// 设置响应头以便浏览器下载文件
-	ctx.Header("Content-Disposition", "attachment; filename="+filepath.Base(filePath))
-	ctx.Header("Content-Type", "application/octet-stream")
-
+	//ctx.Header("Content-Disposition", "attachment; filename="+filepath.Base(filePath))
+	//ctx.Header("Content-Type", "application/octet-stream")
 	// 返回文件
 	//if err := ctx.File(filePath); err != nil {
 	//	return error_wrapper.WrapperError("Failed to send file")
 	//}
-	return error_wrapper.WithSuccessObj(ctx, ctx)
+	return error_wrapper.WithSuccessObj(ctx, map[string]string{
+		"file": filePath,
+	})
 }
