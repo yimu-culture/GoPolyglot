@@ -1,30 +1,27 @@
 package tasks
 
 import (
+	"GoPolyglot/global" // 引入全局包
 	"GoPolyglot/libs/common/error_wrapper"
-	"GoPolyglot/services/task"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
-// TranslateTask 处理翻译任务的执行
+// TranslateTask 处理翻译任务
 func TranslateTask(ctx *gin.Context) error {
 	// 从 URL 中获取任务ID
 	taskIDStr := ctx.Param("task_id")
 	taskID, err := strconv.Atoi(taskIDStr)
 	if err != nil {
-		return error_wrapper.WitheError("User session invalid1")
+		return error_wrapper.WitheError("Invalid task ID")
 	}
 
-	// 调用 Service 层来启动翻译任务
-	task, err := task.StartTranslationTask(ctx, int32(taskID))
-	if err != nil {
-		return error_wrapper.WitheError("User session invalid2")
-	}
+	// 提交任务到全局协程池
+	global.SubmitTask(int32(taskID))
 
-	// 返回任务的状态及相关信息
+	// 返回成功消息
 	return error_wrapper.WithSuccessObj(ctx, map[string]interface{}{
-		"message": "Translation task started successfully",
-		"task":    task,
+		"message": "Translation task started",
+		"task_id": taskID,
 	})
 }

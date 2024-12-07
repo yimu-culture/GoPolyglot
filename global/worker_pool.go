@@ -1,4 +1,4 @@
-package task
+package global
 
 import (
 	"GoPolyglot/models/mysqlDao"
@@ -7,17 +7,25 @@ import (
 	"sync"
 )
 
-// WorkerPool 协程池
+// WorkerPool 协程池结构
 type WorkerPool struct {
 	taskQueue  chan int32
 	numWorkers int
 	wg         sync.WaitGroup
 }
 
-// Start 启动工作池
-func (wp *WorkerPool) Start() {
-	for i := 0; i < wp.numWorkers; i++ {
-		go wp.worker(i)
+// GlobalWorkerPool 用于管理全局单例的 WorkerPool
+var GlobalWorkerPool *WorkerPool
+
+// InitWorkerPool 初始化全局协程池
+func InitWorkerPool(numWorkers int) {
+	GlobalWorkerPool = &WorkerPool{
+		taskQueue:  make(chan int32, 100),
+		numWorkers: numWorkers,
+	}
+
+	for i := 0; i < numWorkers; i++ {
+		go GlobalWorkerPool.worker(i)
 	}
 }
 
@@ -33,25 +41,26 @@ func (wp *WorkerPool) worker(id int) {
 	}
 }
 
-// SubmitTask 提交任务
-func (wp *WorkerPool) SubmitTask(taskID int32) {
-	wp.wg.Add(1)
-	wp.taskQueue <- taskID
+// SubmitTask 提交任务到协程池
+func SubmitTask(taskID int32) {
+	GlobalWorkerPool.wg.Add(1)
+	GlobalWorkerPool.taskQueue <- taskID
 }
 
 // Wait 等待所有任务完成
-func (wp *WorkerPool) Wait() {
-	wp.wg.Wait()
+func Wait() {
+	GlobalWorkerPool.wg.Wait()
 }
 
-// processTranslationTask 处理翻译任务
+// processTranslationTask 模拟翻译任务的处理
 func processTranslationTask(taskID int32) error {
+	// 从数据库获取任务
 	_, err := mysqlDao.GetTranslationTaskByID(nil, taskID)
 	if err != nil {
 		return fmt.Errorf("failed to retrieve task: %v", err)
 	}
 
-	// 更新任务状态
+	// 更新任务状态为 "in_progress"
 	_, err = mysqlDao.UpdateTranslationTask(nil, taskID, map[string]interface{}{
 		"status": "in_progress",
 	})
@@ -59,8 +68,8 @@ func processTranslationTask(taskID int32) error {
 		return fmt.Errorf("failed to update task status: %v", err)
 	}
 
-	// 模拟翻译过程
-	translatedDoc := "Translated document content" // 假设翻译成功
+	// 模拟翻译
+	translatedDoc := "Translated document content"
 	_, err = mysqlDao.UpdateTranslationTask(nil, taskID, map[string]interface{}{
 		"status":         "completed",
 		"translated_doc": translatedDoc,

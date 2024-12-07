@@ -41,6 +41,7 @@ func InitRouter() {
 	router.POST("/auth/users", error_wrapper.WrapperError(auth.RegisterUser)) // 用户注册
 	router.POST("/auth/login", error_wrapper.WrapperError(auth.LoginUser))    // 用户登录
 
+	//上面登录接口 目前暂时不做 接口频率限制
 	// 任务管理相关路由
 	//withAuth := router.Group("", middleware.StrongAuthMiddleware())
 	limitAuth := router.Group("", middleware.StrongAuthMiddleware(), middleware.LogMiddleware(), middleware.RateLimitMiddleware())
