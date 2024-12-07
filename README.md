@@ -22,7 +22,7 @@ md_content = """
 - **路径**：`router/middlewares/middlewares.go`
 
 ## mock 请求三方数据 使用全局协程池
-- **路径**：`global/worker_pool.go`
+- **路径**：` services/task/translate.go `
 
 ## 测试接口
 
