@@ -1,16 +1,11 @@
 package auth
 
 import (
-	"GoPolyglot/internal/models"
+	"GoPolyglot/models/mysqlDao"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
-
-// VerifyPassword 验证密码是否匹配
-func VerifyPassword(storedPassword, inputPassword string) error {
-	return bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(inputPassword))
-}
 
 // HashPassword 对密码进行加密处理
 func HashPassword(password string) (string, error) {
@@ -22,9 +17,9 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-func RegisterUser(ctx *gin.Context, username, password string) (*models.User, error) {
+func RegisterUser(ctx *gin.Context, username, password string) (*mysqlDao.User, error) {
 	// 首先检查用户名是否已存在
-	existingUser, err := models.GetUserByUsername(ctx, username)
+	existingUser, err := mysqlDao.GetUserByUsername(ctx, username)
 	if err == nil && existingUser.ID > 0 {
 		return nil, errors.New("username already exists")
 	}
@@ -34,11 +29,11 @@ func RegisterUser(ctx *gin.Context, username, password string) (*models.User, er
 		return nil, err
 	}
 
-	newUser := models.User{
+	newUser := mysqlDao.User{
 		Username: username,
 		Password: hashedPassword,
 	}
-	user, err := models.CreateUser(ctx, &newUser)
+	user, err := mysqlDao.CreateUser(ctx, &newUser)
 	if err != nil {
 		return nil, err
 	}
