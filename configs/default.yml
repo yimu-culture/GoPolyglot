@@ -1,0 +1,32 @@
+server:
+  env: "develop"
+  appName: "ReelCity.NewManage"
+  mode: "debug"
+  address: "0.0.0.0"
+  port: "6688"
+log:
+  accessKeyID: ""
+  accessKeySecret: ""
+  logStore: ""
+  endpoint: ""
+  project: ""
+  lookAddr: ""
+  storage: 2
+databases:
+  redis:
+    - address: ""
+      port: 6379
+      db: 0
+      username: ""
+      password: ""
+      poolSize: 10
+      minIdleConns: 5
+      dialTimeout: 5
+      asname: "base"
+  mysql:
+    - username: ""
+      password: ""
+      address: "xxxxxx:3306"
+      dbname: ""
+      asname: ""
+      maxOpenConns: 50
